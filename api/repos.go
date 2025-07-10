@@ -8,8 +8,9 @@ import (
 )
 
 type Repo struct {
-    Name     string `json:"name"`
-    Language string `json:"language"`
+    Name            string `json:"name"`
+    Language        string `json:"language"`
+    StargazersCount int    `json:"stargazers_count"`
 }
 
 func FetchUserRepos(username string) []Repo {

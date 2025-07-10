@@ -34,6 +34,13 @@ var rootCmd = &cobra.Command{
                 fmt.Println("⚠️ Failed to generate markdown report:", err)
             }
         }
+        
+        topRepos := analyzer.TopStarredRepos(repos, 3)
+
+        fmt.Println("\n🏆 Top Starred Repositories:")
+        for _, repo := range topRepos {
+            fmt.Printf("• %s – ⭐ %d stars\n", repo.Name, repo.StargazersCount)
+        }
     },
 }
 
