@@ -4,6 +4,7 @@ import (
     "fmt"
     "github.com/spf13/cobra"
     "github.com/Yasaswini-Devi/git-stalker/api"
+    "github.com/Yasaswini-Devi/git-stalker/analyzer"
 )
 
 var rootCmd = &cobra.Command{
@@ -14,6 +15,12 @@ var rootCmd = &cobra.Command{
         username := args[0]
         fmt.Println("Profiling:", username)
         api.FetchUserProfile(username)
+        repos := api.FetchUserRepos(username)
+        if len(repos) == 0 {
+            fmt.Println("No repos found or error occurred.")
+            return
+        }
+        analyzer.AnalyzeLanguages(repos)
     },
 }
 
