@@ -8,6 +8,8 @@ import (
     "github.com/Yasaswini-Devi/git-stalker/report"
 )
 
+var generateMarkdown bool
+
 var rootCmd = &cobra.Command{
     Use:   "git-stalker [username]",
     Short: "GitHub developer profiler",
@@ -26,14 +28,19 @@ var rootCmd = &cobra.Command{
         languageMap := analyzer.AnalyzeLanguages(repos)
         hourCount, dayCount, totalCommits, archetype := analyzer.AnalyzeCommitActivity(username, repos)
 
-        err := report.GenerateMarkdownReport(username, name, bio, languageMap, hourCount, dayCount, archetype, totalCommits)
-        if err != nil {
-            fmt.Println("⚠️ Failed to generate markdown report:", err)
+        if generateMarkdown {
+            err := report.GenerateMarkdownReport(username, name, bio, languageMap, hourCount, dayCount, archetype, totalCommits)
+            if err != nil {
+                fmt.Println("⚠️ Failed to generate markdown report:", err)
+            }
         }
     },
+}
+
+func init() {
+    rootCmd.Flags().BoolVarP(&generateMarkdown, "md", "m", false, "Generate markdown report")
 }
 
 func Execute() {
     cobra.CheckErr(rootCmd.Execute())
 }
-
