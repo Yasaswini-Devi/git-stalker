@@ -27,4 +27,7 @@ func AnalyzeCommitActivity(username string, repos []api.Repo) {
     for d := time.Sunday; d <= time.Saturday; d++ {
         fmt.Printf("%-9s: %2d commits\n", d.String(), dayCount[d])
     }
+
+        archetype := GetArchetype(hourCount, dayCount)
+    fmt.Println("\n🧠 Developer Archetype:", archetype)
 }
