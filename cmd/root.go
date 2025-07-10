@@ -21,6 +21,7 @@ var rootCmd = &cobra.Command{
             return
         }
         analyzer.AnalyzeLanguages(repos)
+        analyzer.AnalyzeCommitActivity(username, repos)
     },
 }
 
