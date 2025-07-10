@@ -24,7 +24,15 @@ func FetchUserProfile(username string) {
     var user map[string]interface{}
     json.NewDecoder(resp.Body).Decode(&user)
 
-    fmt.Printf("Name: %s\n", user["name"])
-    fmt.Printf("Bio: %s\n", user["bio"])
+    if name, ok := user["name"].(string); ok && name != "" {
+        fmt.Println("👤 Name:", name)
+    } else {
+        fmt.Println("👤 Name: N/A")
+    }
+    if bio, ok := user["bio"].(string); ok && bio != "" {
+        fmt.Println("📝 Bio:", bio)
+    } else {
+        fmt.Println("📝 Bio: N/A")
+    }
     fmt.Printf("Public Repos: %v\n", user["public_repos"])
 }
