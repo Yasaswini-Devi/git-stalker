@@ -1,33 +1,24 @@
 package analyzer
 
 import (
-    "fmt"
     "github.com/Yasaswini-Devi/git-stalker/api"
     "time"
 )
 
-func AnalyzeCommitActivity(username string, repos []api.Repo) {
+func AnalyzeCommitActivity(username string, repos []api.Repo) (map[int]int, map[time.Weekday]int, int, string) {
     hourCount := make(map[int]int)
     dayCount := make(map[time.Weekday]int)
+    totalCommits := 0
 
     for _, repo := range repos {
-        times := api.FetchCommitTimestamps(username, repo.Name)
-        for _, t := range times {
-            hourCount[t.Hour()]++
-            dayCount[t.Weekday()]++
+        timestamps := api.FetchCommitTimestamps(username, repo.Name)
+        for _, ts := range timestamps {
+            hourCount[ts.Hour()]++
+            dayCount[ts.Weekday()]++
+            totalCommits++
         }
     }
+    archetype := GetArchetype(hourCount, dayCount)
 
-    fmt.Println("\n⏰ Coding Activity by Hour:")
-    for h := 0; h < 24; h++ {
-        fmt.Printf("%02d:00 - %2d commits\n", h, hourCount[h])
-    }
-
-    fmt.Println("\n📅 Coding Activity by Day:")
-    for d := time.Sunday; d <= time.Saturday; d++ {
-        fmt.Printf("%-9s: %2d commits\n", d.String(), dayCount[d])
-    }
-
-        archetype := GetArchetype(hourCount, dayCount)
-    fmt.Println("\n🧠 Developer Archetype:", archetype)
+    return hourCount, dayCount, totalCommits, archetype
 }
