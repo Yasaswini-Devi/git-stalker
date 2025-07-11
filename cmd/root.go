@@ -9,6 +9,7 @@ import (
 )
 
 var generateMarkdown bool
+var openReport bool
 
 var rootCmd = &cobra.Command{
     Use:   "git-stalker [username]",
@@ -32,6 +33,8 @@ var rootCmd = &cobra.Command{
             err := report.GenerateMarkdownReport(username, name, bio, languageMap, hourCount, dayCount, archetype, totalCommits)
             if err != nil {
                 fmt.Println("⚠️ Failed to generate markdown report:", err)
+            } else if openReport {
+                report.OpenMarkdownReport(username)
             }
         }
         
@@ -46,6 +49,7 @@ var rootCmd = &cobra.Command{
 
 func init() {
     rootCmd.Flags().BoolVarP(&generateMarkdown, "md", "m", false, "Generate markdown report")
+    rootCmd.Flags().BoolVarP(&openReport, "open", "o", false, "Open markdown report after generation")
 }
 
 func Execute() {
