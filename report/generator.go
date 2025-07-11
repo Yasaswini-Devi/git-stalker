@@ -10,7 +10,10 @@ import (
 func GenerateMarkdownReport(username, name, bio string, langs map[string]int, hourMap map[int]int, dayMap map[time.Weekday]int, archetype string, totalCommits int) error {
     var sb strings.Builder
 
+    badge := GenerateBadgeSnippet(archetype)
+    
     sb.WriteString(fmt.Sprintf("# GitHub Profile: [%s](https://github.com/%s)\n\n", username, username))
+    sb.WriteString(fmt.Sprintf("%s\n\n", badge))
     sb.WriteString(fmt.Sprintf("**Name**: %s\n\n", name))
     sb.WriteString(fmt.Sprintf("**Bio**: %s\n\n", bio))
     sb.WriteString(fmt.Sprintf("**Developer Archetype**: %s\n\n", archetype))
