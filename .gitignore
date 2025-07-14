@@ -1,0 +1,19 @@
+# Go build artifacts
+*.exe
+*.out
+*.test
+bin/
+build/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.idea/
+.vscode/
+*.swp
+
+# Generated reports
+*_report.md
+samples/
