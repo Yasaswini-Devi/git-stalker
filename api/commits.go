@@ -2,7 +2,7 @@ package api
 
 import (
     "encoding/json"
-    "fmt"
+    "log"
     "net/http"
     "os"
     "time"
@@ -16,12 +16,13 @@ type Commit struct {
     } `json:"commit"`
 }
 
+// FetchCommitTimestamps returns commit timestamps for a given repo of a user.
 func FetchCommitTimestamps(username, repoName string) []time.Time {
-    url := fmt.Sprintf("https://api.github.com/repos/%s/%s/commits?per_page=30", username, repoName)
+    url := "https://api.github.com/repos/" + username + "/" + repoName + "/commits?per_page=30"
 
     req, err := http.NewRequest("GET", url, nil)
     if err != nil {
-        fmt.Println("Request error:", err)
+        log.Printf("❌ Failed to create request: %v", err)
         return nil
     }
 
@@ -31,23 +32,26 @@ func FetchCommitTimestamps(username, repoName string) []time.Time {
     client := &http.Client{}
     resp, err := client.Do(req)
     if err != nil {
-        fmt.Println("API error:", err)
+        log.Printf("❌ Failed to fetch commits for %s/%s: %v", username, repoName, err)
         return nil
     }
     defer resp.Body.Close()
 
     if resp.StatusCode != http.StatusOK {
-        // silently fail for private/inactive repos
+        log.Printf("⚠️  Skipping %s/%s (status: %d)", username, repoName, resp.StatusCode)
         return nil
     }
 
     var commits []Commit
-    json.NewDecoder(resp.Body).Decode(&commits)
-
-    var times []time.Time
-    for _, c := range commits {
-        times = append(times, c.CommitData.Author.Date)
+    if err := json.NewDecoder(resp.Body).Decode(&commits); err != nil {
+        log.Printf("❌ Failed to parse commits for %s/%s: %v", username, repoName, err)
+        return nil
     }
 
-    return times
+    var commitTimes []time.Time
+    for _, commit := range commits {
+        commitTimes = append(commitTimes, commit.CommitData.Author.Date)
+    }
+
+    return commitTimes
 }

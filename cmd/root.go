@@ -1,7 +1,9 @@
 package cmd
 
 import (
+    "log"
     "fmt"
+    "time"
     "github.com/spf13/cobra"
     "github.com/Yasaswini-Devi/git-stalker/api"
     "github.com/Yasaswini-Devi/git-stalker/analyzer"
@@ -17,37 +19,60 @@ var rootCmd = &cobra.Command{
     Args:  cobra.ExactArgs(1),
     Run: func(cmd *cobra.Command, args []string) {
         username := args[0]
-        fmt.Println("🔍 Profiling:", username)
+        log.Println("🔍 Profiling GitHub user:", username)
 
         name, bio := api.FetchUserProfile(username)
         repos := api.FetchUserRepos(username)
+
+        fmt.Println("👤 Name:", name)
+        fmt.Println("📝 Bio:", bio)
         if len(repos) == 0 {
-            fmt.Println("❌ No repos found or error occurred.")
+            log.Println("❌ No repositories found or an error occurred.")
             return
         }
+        fmt.Printf("Public Repos: %v\n", len(repos))
 
-        languageMap := analyzer.AnalyzeLanguages(repos)
-        hourCount, dayCount, totalCommits, archetype := analyzer.AnalyzeCommitActivity(username, repos)
-
-        if generateMarkdown {
-            err := report.GenerateMarkdownReport(username, name, bio, languageMap, hourCount, dayCount, archetype, totalCommits)
-            if err != nil {
-                fmt.Println("⚠️ Failed to generate markdown report:", err)
-            } else if openReport {
-                report.OpenMarkdownReport(username)
-            }
+        languageStats := analyzer.AnalyzeLanguages(repos)
+        fmt.Println("\n💻 Language Usage:")
+        for lang, count := range languageStats {
+            fmt.Printf("• %-15s : %d repos\n", lang, count)
         }
-        
-        topRepos := analyzer.TopStarredRepos(repos, 3)
 
+        commitsByHour, commitsByDay, totalCommits, archetype := analyzer.AnalyzeCommitActivity(username, repos)
+        fmt.Println("\nTotal Commits: ", totalCommits)
+        fmt.Printf("\n⏰ Commits by Hour:\n")
+        for hour := 0; hour < 24; hour++ {
+            fmt.Printf("• %02d:00 – %d commits\n", hour, commitsByHour[hour])
+        }
+
+        fmt.Printf("\n📅 Commits by Day:\n")
+        days := []string{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}
+        for i, day := range days {
+            weekday := time.Weekday(i)
+            fmt.Printf("• %-9s – %d commits\n", day, commitsByDay[weekday])
+        }
+
+        fmt.Printf("\n🧠 Developer Archetype: %s\n", archetype)
+
+        topRepos := analyzer.TopStarredRepos(repos, 3)
         fmt.Println("\n🏆 Top Starred Repositories:")
         for _, repo := range topRepos {
             fmt.Printf("• %s – ⭐ %d stars\n", repo.Name, repo.StargazersCount)
+        }
+
+        if generateMarkdown {
+            err := report.GenerateMarkdownReport(username, name, bio, languageStats, commitsByHour, commitsByDay, archetype, totalCommits, topRepos)
+            if err != nil {
+                log.Printf("⚠️ Failed to generate markdown report: %v\n", err)
+            } else if openReport {
+                report.OpenMarkdownReport(username)
+            }
         }
     },
 }
 
 func init() {
+    log.SetFlags(0)
     rootCmd.Flags().BoolVarP(&generateMarkdown, "md", "m", false, "Generate markdown report")
     rootCmd.Flags().BoolVarP(&openReport, "open", "o", false, "Open markdown report after generation")
 }

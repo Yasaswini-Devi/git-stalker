@@ -1,6 +1,7 @@
 package api
 
 import (
+    "log"
     "encoding/json"
     "fmt"
     "net/http"
@@ -18,7 +19,7 @@ func FetchUserRepos(username string) []Repo {
 
     req, err := http.NewRequest("GET", url, nil)
     if err != nil {
-        fmt.Println("Request error:", err)
+        log.Println("Request error:", err)
         return nil
     }
 
@@ -28,20 +29,20 @@ func FetchUserRepos(username string) []Repo {
     client := &http.Client{}
     resp, err := client.Do(req)
     if err != nil {
-        fmt.Println("API call error:", err)
+        log.Println("API call error:", err)
         return nil
     }
     defer resp.Body.Close()
 
     if resp.StatusCode != http.StatusOK {
-        fmt.Println("Error: GitHub API returned", resp.Status)
+        log.Println("Error: GitHub API returned", resp.Status)
         return nil
     }
 
     var repos []Repo
     err = json.NewDecoder(resp.Body).Decode(&repos)
     if err != nil {
-        fmt.Println("JSON decode error:", err)
+        log.Println("JSON decode error:", err)
         return nil
     }
 

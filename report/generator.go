@@ -5,9 +5,10 @@ import (
     "os"
     "strings"
     "time"
+    "github.com/Yasaswini-Devi/git-stalker/api"
 )
 
-func GenerateMarkdownReport(username, name, bio string, langs map[string]int, hourMap map[int]int, dayMap map[time.Weekday]int, archetype string, totalCommits int) error {
+func GenerateMarkdownReport(username, name, bio string, langs map[string]int, hourMap map[int]int, dayMap map[time.Weekday]int, archetype string, totalCommits int, topRepos []api.Repo) error {
     var sb strings.Builder
 
     badge := GenerateBadgeSnippet(archetype)
@@ -32,6 +33,11 @@ func GenerateMarkdownReport(username, name, bio string, langs map[string]int, ho
     sb.WriteString("\n## 📅 Commits by Day\n")
     for d := time.Sunday; d <= time.Saturday; d++ {
         sb.WriteString(fmt.Sprintf("- %s → %d commits\n", d.String(), dayMap[d]))
+    }
+
+    sb.WriteString("\n## 🏆 Top Starred Repositories\n")
+    for _, repo := range topRepos {
+        sb.WriteString(fmt.Sprintf("- %s — ⭐ %d stars\n", repo.Name, repo.StargazersCount))
     }
 
     filename := fmt.Sprintf("%s_report.md", username)

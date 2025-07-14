@@ -40,9 +40,5 @@ func FetchUserProfile(username string) (string, string) {
         bio = b
     }
 
-    fmt.Println("👤 Name:", name)
-    fmt.Println("📝 Bio:", bio)
-    fmt.Printf("Public Repos: %v\n", user["public_repos"])
-
     return name, bio
 }
