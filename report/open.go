@@ -1,6 +1,7 @@
 package report
 
 import (
+    "fmt"
     "log"
     "os/exec"
     "runtime"
@@ -16,6 +17,8 @@ func OpenMarkdownReport(username string) {
         log.Println("⚠️ Could not open in VS Code. Falling back to default opener...")
 
         // Optional fallback to system default opener
+        var fallback *exec.Cmd 
+
         switch runtime.GOOS {
         case "darwin":
             fallback = exec.Command("open", filename)
@@ -24,5 +27,10 @@ func OpenMarkdownReport(username string) {
         default:
             fallback = exec.Command("xdg-open", filename)
         }
+        
+        _ = fallback.Start()
+        return
     }
+    
+    fmt.Println("💡 Tip: Press Ctrl+Shift+V in VS Code to open preview side-by-side.")
 }
