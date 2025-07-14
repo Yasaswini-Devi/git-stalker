@@ -1,5 +1,9 @@
 # 🕵️‍♀️ Git Stalker
 
+> 🔖 **Phase 1: Completed**
+> ✅ GitHub CLI profiler with markdown reports and archetype classification.
+> 🚧 Phase 2: Planned — AI enhancements, GraphQL support, and richer contribution analysis.
+
 ![GitHub repo size](https://img.shields.io/github/repo-size/Yasaswini-Devi/git-stalker)
 ![Last Commit](https://img.shields.io/github/last-commit/Yasaswini-Devi/git-stalker)
 ![License](https://img.shields.io/github/license/Yasaswini-Devi/git-stalker)
@@ -39,13 +43,13 @@ export GITHUB_TOKEN=your_personal_access_token
 ## 📦 Usage
 
 ```bash
-git-stalker [username] [flags]
+go run main.go [username] [flags]
 ```
 
 ### Example:
 
 ```bash
-git-stalker Yasaswini-Devi --md --open --log
+go run main.go Yasaswini-Devi --md --open --log
 ```
 
 ### Flags:
