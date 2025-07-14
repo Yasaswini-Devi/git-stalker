@@ -4,6 +4,8 @@ import (
     "log"
     "fmt"
     "time"
+    "io"
+
     "github.com/spf13/cobra"
     "github.com/Yasaswini-Devi/git-stalker/api"
     "github.com/Yasaswini-Devi/git-stalker/analyzer"
@@ -12,19 +14,24 @@ import (
 
 var generateMarkdown bool
 var openReport bool
+var verboseLog bool
 
 var rootCmd = &cobra.Command{
     Use:   "git-stalker [username]",
     Short: "GitHub developer profiler",
     Args:  cobra.ExactArgs(1),
     Run: func(cmd *cobra.Command, args []string) {
+        if !verboseLog {
+            log.SetOutput(io.Discard)
+        }
+
         username := args[0]
         log.Println("🔍 Profiling GitHub user:", username)
 
         name, bio := api.FetchUserProfile(username)
         repos := api.FetchUserRepos(username)
 
-        fmt.Println("👤 Name:", name)
+        fmt.Println("\n👤 Name:", name)
         fmt.Println("📝 Bio:", bio)
         if len(repos) == 0 {
             log.Println("❌ No repositories found or an error occurred.")
@@ -72,9 +79,9 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-    log.SetFlags(0)
     rootCmd.Flags().BoolVarP(&generateMarkdown, "md", "m", false, "Generate markdown report")
     rootCmd.Flags().BoolVarP(&openReport, "open", "o", false, "Open markdown report after generation")
+    rootCmd.Flags().BoolVarP(&verboseLog, "log", "l", false, "Enable detailed logging output")
 }
 
 func Execute() {
