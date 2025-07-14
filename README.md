@@ -1,58 +1,119 @@
-# 🕵️‍♀️ git-stalker — Know a Developer, the Git Way
+# 🕵️‍♀️ Git Stalker
 
-> A sleek, open-source CLI tool that analyzes any GitHub user's developer behavior — language preferences, commit timings, dev archetype, top repos, and more — all in one command.
+![GitHub repo size](https://img.shields.io/github/repo-size/Yasaswini-Devi/git-stalker)
+![Last Commit](https://img.shields.io/github/last-commit/Yasaswini-Devi/git-stalker)
+![License](https://img.shields.io/github/license/Yasaswini-Devi/git-stalker)
+![Dev Archetype](https://img.shields.io/badge/Archetype-9_to_5_Coder-blueviolet)
 
----
+Git Stalker is a developer profiler CLI tool built with Go that analyzes a GitHub user's public activity and summarizes:
 
-## 📸 Sample Output
-
-
-<img width="967" height="382" alt="image" src="https://github.com/user-attachments/assets/499e7bc1-6ba8-4e1c-8e10-dfd9ab01773e" />
-
-
----
-
-## 🚀 Features
-
-- 🔍 Profile any public GitHub user
-- 💻 Analyze language usage across repositories
-- ⏰ Visualize commit activity by **hour** and **day**
-- 🧠 Detect developer **archetype** (Night Owl, 9-to-5 Coder, etc.)
-- 🏆 List top-starred repositories
-- 📝 Auto-generate a Markdown report (`--md`)
-- 🖥️ Auto-open the report in your editor (`--open`)
-- 🏷️ Generate a personalized badge for GitHub READMEs
+- 💻 Language usage across public repos
+- ⏰ Commit activity by hour and day
+- 🧠 Developer archetype classification
+- 🏆 Top-starred public repositories
+- 📄 Optionally generates a Markdown report with badge
 
 ---
 
-## 📦 Installation
+## 🚀 Installation
 
-### 📁 Clone & Build
 ```bash
-git clone https://github.com/YOUR_USERNAME/git-stalker.git
+go install github.com/Yasaswini-Devi/git-stalker@latest
+```
+
+Or clone and run:
+
+```bash
+git clone https://github.com/Yasaswini-Devi/git-stalker
 cd git-stalker
-go build -o git-stalker
+go run main.go [username]
 ```
 
-🔧 Or install via go install (if public)
+> ⚠️ You must set your GitHub token in the environment:
 ```bash
-go install github.com/YOUR_USERNAME/git-stalker@latest
+export GITHUB_TOKEN=your_personal_access_token
 ```
 
-🧪 Usage
+---
+
+## 📦 Usage
+
 ```bash
-./git-stalker <github-username> [flags]
+git-stalker [username] [flags]
 ```
 
-🔍 Examples
+### Example:
+
 ```bash
-./git-stalker Yasaswini-Devi
-./git-stalker torvalds --md
-./git-stalker gaearon --md --open
+git-stalker Yasaswini-Devi --md --open --log
 ```
 
-🛠 Flags
-| Flag | Shortcut | Description |
-|:-------------:|:------------:|:------------:|
-| --md | -m | Generate a Markdown report |
-| --open  | -o | Open the Markdown report after saving |
+### Flags:
+
+| Flag | Description |
+|------|-------------|
+| `--md`, `-m` | Generate a markdown report |
+| `--open`, `-o` | Open the report in VS Code |
+| `--log`, `-l` | Enable verbose logging |
+
+---
+
+## 📝 Sample Output
+
+```
+👤 Name: Yasaswini Devi
+📝 Bio: Builder of things, breaker of silence
+Public Repos: 9
+
+💻 Language Usage:
+• Python          : 2 repos
+• Go              : 1 repos
+• Java            : 1 repos
+• JavaScript      : 3 repos
+
+⏰ Commit Activity:
+- Peak hour: 17:00 → 11 commits
+- Most active day: Friday → 26 commits
+
+🏆 Top Starred Repositories:
+• ATM-Simulator – ⭐ 0 stars
+• Book-Recommendation – ⭐ 0 stars
+```
+
+---
+
+## 📄 Markdown Report
+
+If `--md` is enabled, a Markdown file like `Yasaswini-Devi_report.md` is generated with all analysis and a badge you can add to your README:
+
+```markdown
+![Dev Archetype](https://img.shields.io/badge/Archetype-9_to_5_Coder-blueviolet)
+```
+
+---
+
+## 🛠️ Tech Stack
+
+- [Go](https://golang.org/)
+- [Cobra](https://github.com/spf13/cobra) for CLI
+- GitHub REST API v3 (GraphQL in future)
+- Optional: VS Code CLI for preview
+
+---
+
+## 📜 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 🙌 Contributions
+
+Feel free to fork, raise issues, or suggest new features like:
+- GraphQL API integration
+- Contributor heatmaps
+- AI-powered personality predictions
+
+---
+
+## 🌟 Star the repo if you like it!
